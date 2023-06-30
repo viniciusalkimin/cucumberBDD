@@ -3,11 +3,13 @@ package br.com.alura.leilao.acceptance.steps;
 import br.com.alura.leilao.model.Lance;
 import br.com.alura.leilao.model.Leilao;
 import br.com.alura.leilao.model.Usuario;
+import io.cucumber.java.Before;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Quando;
 import io.cucumber.java.pt.Entao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,13 +19,18 @@ public class PropondoLanceSteps {
     private Leilao leilao;
 
     private Lance lance;
-    private Lance lance2;
-    private Lance lance3;
+    private ArrayList<Lance> lista;
+
+
+    @Before
+    public void setup() {
+        this.lista = new ArrayList<Lance>();
+        this.leilao = new Leilao("Carro Zero");
+    }
 
     @Dado("um lance valido")
     public void dado_um_lance_valido() {
         lance = new Lance(new Usuario("Vinicius"), BigDecimal.TEN);
-        leilao = new Leilao("Carro Zero");
 
     }
 
@@ -37,21 +44,19 @@ public class PropondoLanceSteps {
     }
 
 
-    @Dado("vários lances válidos")
-    public void vários_lances_válidos() {
-        lance2 = new Lance(new Usuario("Vinicius"), new BigDecimal(15L));
-        lance3 = new Lance(new Usuario("Davi"),  new BigDecimal(20L));
-        leilao = new Leilao("Carro ZeroKM");
+    @Dado("um lance de {double} reais dado pelo usuario {string}")
+    public void um_lance_de_reais_dado_pelo_usuario(Double valor, String nome)  {
+        Lance lance1 = new Lance(new Usuario(nome), new BigDecimal(valor));
+        lista.add(lance1);
     }
 
     @Quando("propõe vários lances ao leilão")
     public void propõe_vários_lances_ao_leilão() {
-        leilao.propoe(lance2);
-        leilao.propoe(lance3);
+        lista.forEach( l -> leilao.propoe(l));
     }
     @Entao("os lances são aceitos")
     public void os_lances_são_aceitos() {
-        assertThat(leilao.getLances()).isNotNull();
+        assertThat(leilao.getLances().size()).isEqualTo(lista.size());
         assertEquals(new BigDecimal(15L), leilao.getLances().get(0).getValor());
         assertEquals(new BigDecimal(20L), leilao.getLances().get(1).getValor());
     }
