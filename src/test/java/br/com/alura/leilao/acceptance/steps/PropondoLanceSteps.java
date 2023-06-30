@@ -61,6 +61,17 @@ public class PropondoLanceSteps {
         assertEquals(new BigDecimal(20L), leilao.getLances().get(1).getValor());
     }
 
+    @Dado("um lance inválido de {double} reais para o usuario {string}")
+    public void um_lance_inválido_de_reais(Double valor, String nome) {
+        this.lance = new Lance(new BigDecimal(valor));
+    }
+
+
+    @Entao("o lance não é aceito")
+    public void o_lance_não_é_aceito() {
+        assertEquals(0, leilao.getLances().size());
+    }
+
 
 
 }
