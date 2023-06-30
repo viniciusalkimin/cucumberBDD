@@ -12,3 +12,13 @@ Funcionalidade: Propondo lances ao leilão
     Dado vários lances válidos
     Quando propõe vários lances ao leilão
     Entao os lances são aceitos
+
+  Esquema do Cenario: : Propondo vários lances válidos
+    Dado um lance inválido de <valor> reais
+    Quando propõe ao leilão
+    Entao o lance não é aceito
+
+Exemplos:
+  | valor |
+  | 0     |
+  |  -1   |
